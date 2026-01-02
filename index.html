@@ -12,9 +12,75 @@ html,body{
   background:#000;
   overflow:hidden;
   font-family: Arial, sans-serif;
+  color:#f2c6da;
 }
 
-/* INTRO */
+/* ===== MENU ===== */
+#menuBtn{
+  position:fixed;
+  top:14px;
+  left:14px;
+  z-index:20;
+  font-size:26px;
+  color:#f2c6da;
+  opacity:.7;
+}
+
+#menu{
+  position:fixed;
+  top:0;
+  left:0;
+  width:70%;
+  height:100%;
+  background:rgba(10,10,10,.96);
+  z-index:19;
+  transform:translateX(-100%);
+  transition:.4s;
+  padding:60px 20px;
+}
+
+#menu a{
+  display:block;
+  margin-bottom:20px;
+  font-size:18px;
+  text-decoration:none;
+  color:#f2c6da;
+  opacity:.8;
+}
+
+/* ===== SECTIONS ===== */
+.section{
+  position:fixed;
+  inset:0;
+  display:none;
+  z-index:6;
+  background:rgba(0,0,0,.6);
+  overflow-y:auto;
+}
+
+.section.active{
+  display:block;
+}
+
+/* ===== CALENDAR ===== */
+.memory{
+  margin:20px;
+}
+
+.memory img{
+  width:100%;
+  border-radius:6px;
+  margin-bottom:8px;
+}
+
+/* ===== MUSIC ===== */
+.song{
+  margin:20px;
+  padding:12px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+/* ===== INTRO ===== */
 #intro{
   position:fixed;
   inset:0;
@@ -26,76 +92,15 @@ html,body{
   transition:opacity 1.2s;
 }
 
-.cover{
-  text-align:center;
-  color:#e8bcd0;
-}
-
 .cover img{
   width:220px;
   height:220px;
   object-fit:cover;
   border-radius:6px;
   box-shadow:0 0 25px rgba(255,120,180,.35);
-  filter:contrast(1.05) saturate(.9);
 }
 
-.cover h1{
-  margin:18px 0 6px;
-  font-size:28px;
-  font-weight:300;
-  letter-spacing:2px;
-}
-
-.cover p{
-  font-size:14px;
-  opacity:.7;
-  letter-spacing:1px;
-}
-
-/* FONDO */
-#bg{
-  position:fixed;
-  inset:-6%;
-  background:radial-gradient(circle at center,#0a0a0a,#000);
-  z-index:0;
-}
-
-/* IMÁGENES */
-#container{
-  position:fixed;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:1;
-  pointer-events:none;
-}
-
-#container img{
-  max-width:100%;
-  max-height:100%;
-  opacity:0;
-  transition:opacity 2s;
-  filter:drop-shadow(0 0 20px rgba(255,80,160,.35));
-}
-
-/* TEXTO */
-.love{
-  position:absolute;
-  color:rgba(255,120,190,.75);
-  font-size:18px;
-  animation:fall linear forwards;
-  pointer-events:none;
-  z-index:3;
-}
-
-@keyframes fall{
-  from{transform:translateY(-6vh);}
-  to{transform:translateY(106vh);opacity:0;}
-}
-
-/* CORAZÓN */
+/* ===== HEART & FX ===== */
 #heart{
   position:fixed;
   inset:0;
@@ -111,20 +116,16 @@ html,body{
   fill:none;
   stroke:#ff4f86;
   stroke-width:2;
-  filter:drop-shadow(0 0 12px rgba(255,90,140,.6));
-  transform:scale(.9);
 }
 
-/* EMI */
 #emi{
   position:fixed;
   bottom:17%;
   width:100%;
   text-align:center;
-  color:rgba(255,150,210,.9);
   font-size:30px;
   opacity:0;
-  transition:opacity .45s;
+  transition:.4s;
   z-index:5;
 }
 </style>
@@ -132,18 +133,38 @@ html,body{
 
 <body>
 
+<div id="menuBtn">☰</div>
+
+<div id="menu">
+  <a onclick="openSection('inicio')">Inicio</a>
+  <a onclick="openSection('calendar')">Calendario</a>
+  <a onclick="openSection('music')">Música</a>
+</div>
+
+<!-- INTRO -->
 <div id="intro">
   <div class="cover">
     <img src="cover.jpg">
-    <h1>Emi</h1>
-    <p>toca para comenzar</p>
+    <p style="text-align:center;opacity:.6">toca para comenzar</p>
   </div>
 </div>
 
-<div id="bg"></div>
+<!-- SECTIONS -->
+<div id="calendar" class="section">
+  <div class="memory">
+    <img src="cal1.jpg">
+    <p>La mejor carta del mundo 💗</p>
+  </div>
+  <div class="memory">
+    <img src="cal2.jpg">
+    <p>Cartita de mis sentimiento💗</p>
+  </div>
+</div>
 
-<div id="container">
-  <img id="img">
+<div id="music" class="section">
+  <div class="song">Angel – Massive Attack</div>
+  <div class="song">Lovers Rock – TV Girl</div>
+  <div class="song">Blue Hair – TV Girl</div>
 </div>
 
 <div id="heart">
@@ -154,84 +175,35 @@ html,body{
 
 <div id="emi">Emi&lt;3</div>
 
-<audio id="music" loop preload="auto">
+<audio id="musicAudio" loop>
   <source src="angel.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-const images=["img1.jpg","img2.jpg","img3.jpg"];
-let imgIndex=0;
+const menu=document.getElementById("menu");
+document.getElementById("menuBtn").onclick=()=>{
+  menu.style.transform=menu.style.transform?"":"translateX(0)";
+};
 
-const img=document.getElementById("img");
-const music=document.getElementById("music");
-const heart=document.querySelector("#heart svg");
-const emi=document.getElementById("emi");
-const bg=document.getElementById("bg");
-
-let ctx,analyser,data;
-let scale=.9,target=.9;
-let lastHue=0,hue=320;
-let started=false;
-
-function initAudio(){
-  ctx=new (window.AudioContext||window.webkitAudioContext)();
-  const src=ctx.createMediaElementSource(music);
-  analyser=ctx.createAnalyser();
-  analyser.fftSize=256;
-  data=new Uint8Array(analyser.frequencyBinCount);
-  src.connect(analyser);
-  analyser.connect(ctx.destination);
-  setInterval(analyze,33);
-}
-
-function analyze(){
-  analyser.getByteFrequencyData(data);
-  let bass=data.slice(0,10).reduce((a,b)=>a+b)/10;
-  target=.85+bass/300;
-  scale+=(target-scale)*.25;
-  heart.style.transform=`scale(${scale})`;
-
-  if(Date.now()-lastHue>300){
-    hue+=.4;
-    bg.style.filter=`hue-rotate(${hue}deg)`;
-    lastHue=Date.now();
+function openSection(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  if(id!=="inicio"){
+    document.getElementById(id).classList.add("active");
   }
+  menu.style.transform="translateX(-100%)";
 }
 
-function showImage(){
-  img.src=images[imgIndex];
-  img.style.opacity=1;
-  setTimeout(()=>img.style.opacity=0,3500);
-  imgIndex=(imgIndex+1)%images.length;
-}
-
-function rain(){
-  setInterval(()=>{
-    if(document.querySelectorAll(".love").length<6){
-      const t=document.createElement("div");
-      t.className="love";
-      t.textContent="I love you";
-      t.style.left=Math.random()*100+"vw";
-      t.style.animationDuration=(4+Math.random()*2)+"s";
-      document.body.appendChild(t);
-      setTimeout(()=>t.remove(),6000);
-    }
-  },650);
-}
+let started=false;
+const music=document.getElementById("musicAudio");
+const emi=document.getElementById("emi");
 
 document.body.addEventListener("click",()=>{
   if(!started){
     document.getElementById("intro").style.opacity=0;
     setTimeout(()=>document.getElementById("intro").remove(),1200);
-
     music.play().catch(()=>{});
-    initAudio();
-    rain();
-    showImage();
-    setInterval(showImage,16000);
     started=true;
   }
-
   emi.style.opacity=1;
   setTimeout(()=>emi.style.opacity=0,600);
 });
