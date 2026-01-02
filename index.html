@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>♡</title>
+
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  background:#000;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  color:#f2c6da;
+}
+
+/* ===== MENU ===== */
+#menuBtn{
+  position:fixed;
+  top:14px;
+  left:14px;
+  z-index:20;
+  font-size:26px;
+  opacity:.7;
+}
+
+#menu{
+  position:fixed;
+  top:0;
+  left:0;
+  width:70%;
+  height:100%;
+  background:rgba(10,10,10,.95);
+  z-index:19;
+  transform:translateX(-100%);
+  transition:.4s;
+  padding:60px 20px;
+}
+
+#menu a{
+  display:block;
+  margin-bottom:22px;
+  font-size:18px;
+  text-decoration:none;
+  color:#f2c6da;
+  opacity:.85;
+}
+
+/* ===== SECTIONS ===== */
+.section{
+  position:fixed;
+  inset:0;
+  display:none;
+  background:rgba(0,0,0,.65);
+  overflow-y:auto;
+  z-index:6;
+}
+
+.section.active{display:block}
+
+/* ===== INTRO ===== */
+#intro{
+  position:fixed;
+  inset:0;
+  background:#0b0b0b;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+  transition:opacity 1.2s;
+}
+
+.cover img{
+  width:220px;
+  border-radius:6px;
+  box-shadow:0 0 30px rgba(255,120,180,.35);
+}
+
+/* ===== HEART ===== */
+#heart{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:4;
+}
+
+#heart svg{
+  width:220px;
+  height:220px;
+  fill:none;
+  stroke:#ff4f86;
+  stroke-width:2;
+  filter:drop-shadow(0 0 10px rgba(255,80,140,.4));
+  transition:transform .1s;
+}
+
+/* ===== EMI ===== */
+#emi{
+  position:fixed;
+  bottom:18%;
+  width:100%;
+  text-align:center;
+  font-size:32px;
+  opacity:0;
+  transition:.4s;
+  z-index:5;
+}
+
+/* ===== CALENDAR ===== */
+.memory{
+  margin:20px;
+}
+.memory img{
+  width:100%;
+  border-radius:6px;
+  margin-bottom:6px;
+}
+
+/* ===== MUSIC ===== */
+.song{
+  margin:14px 20px;
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  opacity:.85;
+}
+
+/* ===== GRAIN ===== */
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:50;
+}
+</style>
+</head>
+
+<body>
+
+<!-- MENU -->
+<div id="menuBtn">☰</div>
+<div id="menu">
+  <a onclick="openSection('inicio')">Inicio</a>
+  <a onclick="openSection('calendar')">Calendario</a>
+  <a onclick="openSection('music')">Música</a>
+</div>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="cover">
+    <img src="cover.jpg">
+    <p style="opacity:.6">toca para comenzar</p>
+  </div>
+</div>
+
+<!-- CALENDAR -->
+<div id="calendar" class="section">
+  <div class="memory">
+    <img src="calendar/cal1.jpg">
+    <p>26 de diciembre 2025 - La mejor carta del mundo💗</p>
+  </div>
+  <div class="memory">
+    <img src="calendar/cal2.jpg">
+    <p>26 de diciembre 2025 -Una carta de sentimientos por y para tí<3</p>
+  </div>
+</div>
+
+<!-- MUSIC -->
+<div id="music" class="section">
+  <audio id="player" controls style="width:90%;margin:20px"></audio>
+  <div class="song" onclick="playSong('songs/angel.mp3')">
+    Angel — Massive Attack
+  </div>
+</div>
+
+<!-- HEART -->
+<div id="heart">
+<svg viewBox="0 0 24 24">
+<path d="M12 21s-7-4.6-10-9.5C-1 6.5 4 2 8 5c2 1.7 4 4 4 4s2-2.3 4-4c4-3 9 1.5 6 6.5C19 16.4 12 21 12 21z"/>
+</svg>
+</div>
+
+<div id="emi">Emi&lt;3</div>
+
+<audio id="bg" loop crossorigin="anonymous">
+  <source src="songs/angel.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* MENU */
+const menu=document.getElementById("menu");
+menuBtn.onclick=()=>menu.style.transform =
+menu.style.transform?"":"translateX(0)";
+
+function openSection(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  if(id!=="inicio") document.getElementById(id).classList.add("active");
+  menu.style.transform="translateX(-100%)";
+}
+
+/* MUSIC */
+const audio=document.getElementById("bg");
+const heart=document.querySelector("#heart svg");
+const ctx=new AudioContext();
+const src=ctx.createMediaElementSource(audio);
+const analyser=ctx.createAnalyser();
+src.connect(analyser);
+analyser.connect(ctx.destination);
+analyser.fftSize=64;
+const data=new Uint8Array(analyser.frequencyBinCount);
+
+function animate(){
+  analyser.getByteFrequencyData(data);
+  let avg=data.reduce((a,b)=>a+b)/data.length;
+  let scale=1+avg/300;
+  heart.style.transform=`scale(${scale})`;
+  requestAnimationFrame(animate);
+}
+
+/* START */
+let started=false;
+document.body.onclick=()=>{
+  if(!started){
+    ctx.resume();
+    audio.play();
+    animate();
+    intro.style.opacity=0;
+    setTimeout(()=>intro.remove(),1200);
+    started=true;
+  }
+  emi.style.opacity=1;
+  setTimeout(()=>emi.style.opacity=0,600);
+};
+
+function playSong(src){
+  audio.src=src;
+  audio.play();
+}
+</script>
+
+</body>
+</html>
