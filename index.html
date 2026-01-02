@@ -105,6 +105,7 @@ html,body{
 
 <div id="emi">Emi&lt;3</div>
 
+/* AUDIO */
 <audio id="music" loop preload="auto">
   <source src="angel.mp3" type="audio/mpeg">
 </audio>
@@ -121,32 +122,22 @@ const heart=document.querySelector("#heart svg");
 const emi=document.getElementById("emi");
 const bg=document.getElementById("bg");
 
-/* AUDIO */
-let ctx, analyser, data, hue=320;
+<audio id="music" loop preload="auto">
+  <source src="angel.mp3" type="audio/mpeg">
+</audio>
 
-function initAudio(){
-  ctx=new (window.AudioContext||window.webkitAudioContext)();
-  const src=ctx.createMediaElementSource(music);
-  analyser=ctx.createAnalyser();
-  analyser.fftSize=256;
-  data=new Uint8Array(analyser.frequencyBinCount);
-  src.connect(analyser);
-  analyser.connect(ctx.destination);
-  animate();
-}
+<script>
+const music=document.getElementById("music");
+let audioStarted=false;
 
-function animate(){
-  requestAnimationFrame(animate);
-  analyser.getByteFrequencyData(data);
-
-  let bass=data.slice(0,10).reduce((a,b)=>a+b)/10;
-
-  heart.style.transform=`scale(${0.85 + bass/260})`;
-  bg.style.transform=`scale(${1 + bass/1800})`;
-
-  hue+=0.02;
-  bg.style.filter=`hue-rotate(${hue}deg)`;
-}
+document.body.addEventListener("click",()=>{
+  if(!audioStarted){
+    music.play().catch(()=>{});
+    initAudio();
+    audioStarted=true;
+  }
+});
+</script>
 
 /* IMÁGENES COMO RECUERDOS */
 function showImage(){
