@@ -54,18 +54,30 @@ html,body{
   z-index:11;
 }
 
-/* ===== FLOATING TEXT ===== */
+/* ===== FLOATING TEXT (ENHANCED) ===== */
 .float{
   position:fixed;
-  bottom:-20%;
-  font-size:13px;
-  opacity:.4;
-  animation:floatUp 18s linear infinite;
+  bottom:-30%;
+  animation:floatUp linear infinite;
   z-index:3;
+  white-space:nowrap;
 }
+
+.float.love{
+  font-size:18px;
+  color:#ffd1e6;
+  text-shadow:0 0 8px rgba(255,120,180,.45);
+  opacity:.65;
+}
+
+.float.heart{
+  font-size:14px;
+  opacity:.35;
+}
+
 @keyframes floatUp{
-  from{transform:translateY(120vh)}
-  to{transform:translateY(-140vh)}
+  from{transform:translateY(130vh)}
+  to{transform:translateY(-160vh)}
 }
 
 /* ===== MENU ===== */
@@ -183,9 +195,28 @@ html,body{
 <div id="crt"></div>
 <div id="noise"></div>
 
-<div class="float" style="left:12%">♡</div>
-<div class="float" style="left:40%">i love you</div>
-<div class="float" style="left:68%">♡</div>
+<!-- FLOATING RAIN -->
+<script>
+for(let i=0;i<22;i++){
+  const t=document.createElement("div");
+  t.className="float love";
+  t.textContent="I love you";
+  t.style.left=Math.random()*100+"%";
+  t.style.animationDuration=14+Math.random()*10+"s";
+  t.style.animationDelay=Math.random()*-20+"s";
+  document.body.appendChild(t);
+}
+
+for(let i=0;i<14;i++){
+  const h=document.createElement("div");
+  h.className="float heart";
+  h.textContent="♡";
+  h.style.left=Math.random()*100+"%";
+  h.style.animationDuration=18+Math.random()*12+"s";
+  h.style.animationDelay=Math.random()*-25+"s";
+  document.body.appendChild(h);
+}
+</script>
 
 <!-- MENU -->
 <div id="menuBtn">☰</div>
@@ -207,11 +238,11 @@ html,body{
 <div id="calendar" class="section">
   <div class="memory">
     <img src="cal1.jpg">
-    <p>12 de febrero — el inicio de todo</p>
+    <p>26 diciembre 2025 - La mejor carta del mundo 💗</p>
   </div>
   <div class="memory">
     <img src="cal2.jpg">
-    <p>Un día que guardo para siempre</p>
+    <p>26 de diciembre 2025 - Carta de sentimientos💗</p>
   </div>
 </div>
 
