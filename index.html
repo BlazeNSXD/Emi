@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>I love you</title>
+
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  background:black;
+  overflow:hidden;
+  font-family: Arial, sans-serif;
+}
+
+/* FONDO */
+#bg{
+  position:fixed;
+  inset:-6%;
+  background:radial-gradient(circle at center, #0a0a0a, #000);
+  z-index:0;
+}
+
+/* IMÁGENES */
+#container{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:1;
+  pointer-events:none;
+}
+
+#container img{
+  max-width:100%;
+  max-height:100%;
+  opacity:0;
+  transition:opacity 2s;
+  filter:drop-shadow(0 0 22px rgba(255,80,160,.35));
+}
+
+/* TEXTO */
+.love{
+  position:absolute;
+  color:rgba(255,120,190,.8);
+  font-size:19px;
+  animation:fall linear forwards;
+  pointer-events:none;
+  z-index:3;
+}
+
+@keyframes fall{
+  from{ transform:translateY(-6vh); }
+  to{ transform:translateY(106vh); opacity:0;}
+}
+
+/* CORAZÓN */
+#heart{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:4;
+}
+
+#heart svg{
+  width:230px;
+  height:230px;
+  stroke:#ff4f86;
+  stroke-width:2;
+  filter:drop-shadow(0 0 14px rgba(255,90,140,.7));
+  transition:transform .05s;
+}
+
+/* EMI */
+#emi{
+  position:fixed;
+  bottom:17%;
+  width:100%;
+  text-align:center;
+  color:rgba(255,150,210,.9);
+  font-size:32px;
+  opacity:0;
+  transition:opacity .45s;
+  z-index:5;
+}
+</style>
+</head>
+
+<body>
+
+<div id="bg"></div>
+
+<div id="container">
+  <img id="img">
+</div>
+
+<div id="heart">
+  <svg viewBox="0 0 24 24" fill="none">
+    <path d="M12 21s-7-4.6-10-9.5C-1 6.5 4 2 8 5c2 1.7 4 4 4 4s2-2.3 4-4c4-3 9 1.5 6 6.5C19 16.4 12 21 12 21z"/>
+  </svg>
+</div>
+
+<div id="emi">Emi&lt;3</div>
+
+<audio id="music" loop preload="auto">
+  <source src="angel.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* CONFIG */
+const images=["img1.jpg","img2.jpg","img3.jpg"];
+let imgIndex=0;
+
+const img=document.getElementById("img");
+const container=document.getElementById("container");
+const music=document.getElementById("music");
+const heart=document.querySelector("#heart svg");
+const emi=document.getElementById("emi");
+const bg=document.getElementById("bg");
+
+/* AUDIO */
+let ctx, analyser, data, hue=320;
+
+function initAudio(){
+  ctx=new (window.AudioContext||window.webkitAudioContext)();
+  const src=ctx.createMediaElementSource(music);
+  analyser=ctx.createAnalyser();
+  analyser.fftSize=256;
+  data=new Uint8Array(analyser.frequencyBinCount);
+  src.connect(analyser);
+  analyser.connect(ctx.destination);
+  animate();
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+  analyser.getByteFrequencyData(data);
+
+  let bass=data.slice(0,10).reduce((a,b)=>a+b)/10;
+
+  heart.style.transform=`scale(${0.85 + bass/260})`;
+  bg.style.transform=`scale(${1 + bass/1800})`;
+
+  hue+=0.02;
+  bg.style.filter=`hue-rotate(${hue}deg)`;
+}
+
+/* IMÁGENES COMO RECUERDOS */
+function showImage(){
+  img.src=images[imgIndex];
+  img.style.opacity=1;
+
+  setTimeout(()=>img.style.opacity=0,4000);
+
+  imgIndex=(imgIndex+1)%images.length;
+}
+
+/* LLUVIA */
+function rain(){
+  setInterval(()=>{
+    if(document.querySelectorAll(".love").length<9){
+      const t=document.createElement("div");
+      t.className="love";
+      t.textContent="I love you";
+      t.style.left=Math.random()*100+"vw";
+      t.style.animationDuration=(4+Math.random()*2)+"s";
+      document.body.appendChild(t);
+      setTimeout(()=>t.remove(),7000);
+    }
+  },550);
+}
+
+/* INTERACCIÓN */
+document.body.addEventListener("click",()=>{
+  emi.style.opacity=1;
+  setTimeout(()=>emi.style.opacity=0,650);
+});
+
+/* INICIO */
+music.play();
+initAudio();
+rain();
+showImage();
+setInterval(showImage,15000);
+</script>
+
+</body>
+</html>
