@@ -2,22 +2,62 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>I love you</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>♡</title>
 
 <style>
 html,body{
   margin:0;
   padding:0;
-  background:black;
+  background:#000;
   overflow:hidden;
   font-family: Arial, sans-serif;
+}
+
+/* INTRO */
+#intro{
+  position:fixed;
+  inset:0;
+  background:#0b0b0b;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+  transition:opacity 1.2s;
+}
+
+.cover{
+  text-align:center;
+  color:#e8bcd0;
+}
+
+.cover img{
+  width:220px;
+  height:220px;
+  object-fit:cover;
+  border-radius:6px;
+  box-shadow:0 0 25px rgba(255,120,180,.35);
+  filter:contrast(1.05) saturate(.9);
+}
+
+.cover h1{
+  margin:18px 0 6px;
+  font-size:28px;
+  font-weight:300;
+  letter-spacing:2px;
+}
+
+.cover p{
+  font-size:14px;
+  opacity:.7;
+  letter-spacing:1px;
 }
 
 /* FONDO */
 #bg{
   position:fixed;
   inset:-6%;
-  background:radial-gradient(circle at center, #0a0a0a, #000);
+  background:radial-gradient(circle at center,#0a0a0a,#000);
   z-index:0;
 }
 
@@ -37,22 +77,22 @@ html,body{
   max-height:100%;
   opacity:0;
   transition:opacity 2s;
-  filter:drop-shadow(0 0 22px rgba(255,80,160,.35));
+  filter:drop-shadow(0 0 20px rgba(255,80,160,.35));
 }
 
 /* TEXTO */
 .love{
   position:absolute;
-  color:rgba(255,120,190,.8);
-  font-size:19px;
+  color:rgba(255,120,190,.75);
+  font-size:18px;
   animation:fall linear forwards;
   pointer-events:none;
   z-index:3;
 }
 
 @keyframes fall{
-  from{ transform:translateY(-6vh); }
-  to{ transform:translateY(106vh); opacity:0;}
+  from{transform:translateY(-6vh);}
+  to{transform:translateY(106vh);opacity:0;}
 }
 
 /* CORAZÓN */
@@ -66,12 +106,13 @@ html,body{
 }
 
 #heart svg{
-  width:230px;
-  height:230px;
+  width:220px;
+  height:220px;
+  fill:none;
   stroke:#ff4f86;
   stroke-width:2;
-  filter:drop-shadow(0 0 14px rgba(255,90,140,.7));
-  transition:transform .05s;
+  filter:drop-shadow(0 0 12px rgba(255,90,140,.6));
+  transform:scale(.9);
 }
 
 /* EMI */
@@ -81,7 +122,7 @@ html,body{
   width:100%;
   text-align:center;
   color:rgba(255,150,210,.9);
-  font-size:32px;
+  font-size:30px;
   opacity:0;
   transition:opacity .45s;
   z-index:5;
@@ -91,6 +132,14 @@ html,body{
 
 <body>
 
+<div id="intro">
+  <div class="cover">
+    <img src="cover.jpg">
+    <h1>Emi</h1>
+    <p>toca para comenzar</p>
+  </div>
+</div>
+
 <div id="bg"></div>
 
 <div id="container">
@@ -98,84 +147,94 @@ html,body{
 </div>
 
 <div id="heart">
-  <svg viewBox="0 0 24 24" fill="none">
+  <svg viewBox="0 0 24 24">
     <path d="M12 21s-7-4.6-10-9.5C-1 6.5 4 2 8 5c2 1.7 4 4 4 4s2-2.3 4-4c4-3 9 1.5 6 6.5C19 16.4 12 21 12 21z"/>
   </svg>
 </div>
 
 <div id="emi">Emi&lt;3</div>
 
-/* AUDIO */
 <audio id="music" loop preload="auto">
   <source src="angel.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-/* CONFIG */
 const images=["img1.jpg","img2.jpg","img3.jpg"];
 let imgIndex=0;
 
 const img=document.getElementById("img");
-const container=document.getElementById("container");
 const music=document.getElementById("music");
 const heart=document.querySelector("#heart svg");
 const emi=document.getElementById("emi");
 const bg=document.getElementById("bg");
 
-<audio id="music" loop preload="auto">
-  <source src="angel.mp3" type="audio/mpeg">
-</audio>
+let ctx,analyser,data;
+let scale=.9,target=.9;
+let lastHue=0,hue=320;
+let started=false;
 
-<script>
-const music=document.getElementById("music");
-let audioStarted=false;
+function initAudio(){
+  ctx=new (window.AudioContext||window.webkitAudioContext)();
+  const src=ctx.createMediaElementSource(music);
+  analyser=ctx.createAnalyser();
+  analyser.fftSize=256;
+  data=new Uint8Array(analyser.frequencyBinCount);
+  src.connect(analyser);
+  analyser.connect(ctx.destination);
+  setInterval(analyze,33);
+}
 
-document.body.addEventListener("click",()=>{
-  if(!audioStarted){
-    music.play().catch(()=>{});
-    initAudio();
-    audioStarted=true;
+function analyze(){
+  analyser.getByteFrequencyData(data);
+  let bass=data.slice(0,10).reduce((a,b)=>a+b)/10;
+  target=.85+bass/300;
+  scale+=(target-scale)*.25;
+  heart.style.transform=`scale(${scale})`;
+
+  if(Date.now()-lastHue>300){
+    hue+=.4;
+    bg.style.filter=`hue-rotate(${hue}deg)`;
+    lastHue=Date.now();
   }
-});
-</script>
+}
 
-/* IMÁGENES COMO RECUERDOS */
 function showImage(){
   img.src=images[imgIndex];
   img.style.opacity=1;
-
-  setTimeout(()=>img.style.opacity=0,4000);
-
+  setTimeout(()=>img.style.opacity=0,3500);
   imgIndex=(imgIndex+1)%images.length;
 }
 
-/* LLUVIA */
 function rain(){
   setInterval(()=>{
-    if(document.querySelectorAll(".love").length<9){
+    if(document.querySelectorAll(".love").length<6){
       const t=document.createElement("div");
       t.className="love";
       t.textContent="I love you";
       t.style.left=Math.random()*100+"vw";
       t.style.animationDuration=(4+Math.random()*2)+"s";
       document.body.appendChild(t);
-      setTimeout(()=>t.remove(),7000);
+      setTimeout(()=>t.remove(),6000);
     }
-  },550);
+  },650);
 }
 
-/* INTERACCIÓN */
 document.body.addEventListener("click",()=>{
-  emi.style.opacity=1;
-  setTimeout(()=>emi.style.opacity=0,650);
-});
+  if(!started){
+    document.getElementById("intro").style.opacity=0;
+    setTimeout(()=>document.getElementById("intro").remove(),1200);
 
-/* INICIO */
-music.play();
-initAudio();
-rain();
-showImage();
-setInterval(showImage,15000);
+    music.play().catch(()=>{});
+    initAudio();
+    rain();
+    showImage();
+    setInterval(showImage,16000);
+    started=true;
+  }
+
+  emi.style.opacity=1;
+  setTimeout(()=>emi.style.opacity=0,600);
+});
 </script>
 
 </body>
