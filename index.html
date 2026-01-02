@@ -5,14 +5,67 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>♡</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
+
 <style>
 html,body{
   margin:0;
   padding:0;
   background:#000;
   overflow:hidden;
-  font-family:Arial,sans-serif;
+  font-family:'Space Mono', monospace;
   color:#f2c6da;
+}
+
+/* ===== BACKGROUND IMAGES ===== */
+#bgImages{
+  position:fixed;
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  opacity:.32;
+  filter:saturate(1.1);
+  transition:opacity 1s, background-image 1s;
+  z-index:1;
+}
+
+/* ===== VHS EFFECTS ===== */
+#noise{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect width='1' height='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");
+  opacity:.06;
+  animation:noiseMove .5s steps(2) infinite;
+  z-index:12;
+}
+@keyframes noiseMove{
+  0%{transform:translate(0,0)}
+  100%{transform:translate(-10%,10%)}
+}
+
+#crt{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px);
+  background-size:100% 3px;
+  opacity:.08;
+  z-index:11;
+}
+
+/* ===== FLOATING TEXT ===== */
+.float{
+  position:fixed;
+  bottom:-20%;
+  font-size:13px;
+  opacity:.4;
+  animation:floatUp 18s linear infinite;
+  z-index:3;
+}
+@keyframes floatUp{
+  from{transform:translateY(120vh)}
+  to{transform:translateY(-140vh)}
 }
 
 /* ===== MENU ===== */
@@ -24,27 +77,25 @@ html,body{
   font-size:26px;
   opacity:.7;
 }
-
 #menu{
   position:fixed;
   top:0;
   left:0;
   width:70%;
   height:100%;
-  background:rgba(10,10,10,.95);
+  background:rgba(10,10,10,.96);
   z-index:19;
   transform:translateX(-100%);
   transition:.4s;
   padding:60px 20px;
 }
-
 #menu a{
   display:block;
   margin-bottom:22px;
   font-size:18px;
   text-decoration:none;
   color:#f2c6da;
-  opacity:.85;
+  opacity:.8;
 }
 
 /* ===== SECTIONS ===== */
@@ -52,12 +103,27 @@ html,body{
   position:fixed;
   inset:0;
   display:none;
-  background:rgba(0,0,0,.65);
+  background:rgba(0,0,0,.7);
   overflow-y:auto;
   z-index:6;
 }
-
 .section.active{display:block}
+
+/* ===== CALENDAR ===== */
+.memory{margin:20px}
+.memory img{
+  width:100%;
+  border-radius:6px;
+  margin-bottom:6px;
+}
+
+/* ===== MUSIC ===== */
+.song{
+  margin:12px 20px;
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  opacity:.85;
+}
 
 /* ===== INTRO ===== */
 #intro{
@@ -70,11 +136,13 @@ html,body{
   z-index:10;
   transition:opacity 1.2s;
 }
-
+.cover{text-align:center}
 .cover img{
   width:220px;
+  height:220px;
+  object-fit:cover;
   border-radius:6px;
-  box-shadow:0 0 30px rgba(255,120,180,.35);
+  box-shadow:0 0 25px rgba(255,120,180,.35);
 }
 
 /* ===== HEART ===== */
@@ -86,67 +154,45 @@ html,body{
   align-items:center;
   z-index:4;
 }
-
 #heart svg{
   width:220px;
   height:220px;
   fill:none;
   stroke:#ff4f86;
   stroke-width:2;
-  filter:drop-shadow(0 0 10px rgba(255,80,140,.4));
-  transition:transform .1s;
+  transition:transform .15s;
 }
 
 /* ===== EMI ===== */
 #emi{
   position:fixed;
-  bottom:18%;
+  bottom:17%;
   width:100%;
   text-align:center;
-  font-size:32px;
+  font-size:28px;
   opacity:0;
   transition:.4s;
   z-index:5;
-}
-
-/* ===== CALENDAR ===== */
-.memory{
-  margin:20px;
-}
-.memory img{
-  width:100%;
-  border-radius:6px;
-  margin-bottom:6px;
-}
-
-/* ===== MUSIC ===== */
-.song{
-  margin:14px 20px;
-  padding:10px;
-  border-bottom:1px solid rgba(255,255,255,.1);
-  opacity:.85;
-}
-
-/* ===== GRAIN ===== */
-body:after{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
-  pointer-events:none;
-  z-index:50;
 }
 </style>
 </head>
 
 <body>
 
+<div id="bgImages"></div>
+<div id="crt"></div>
+<div id="noise"></div>
+
+<div class="float" style="left:12%">♡</div>
+<div class="float" style="left:40%">i love you</div>
+<div class="float" style="left:68%">♡</div>
+
 <!-- MENU -->
 <div id="menuBtn">☰</div>
 <div id="menu">
   <a onclick="openSection('inicio')">Inicio</a>
   <a onclick="openSection('calendar')">Calendario</a>
-  <a onclick="openSection('music')">Música</a>
+  <a onclick="openSection('musicSection')">Música</a>
 </div>
 
 <!-- INTRO -->
@@ -160,41 +206,43 @@ body:after{
 <!-- CALENDAR -->
 <div id="calendar" class="section">
   <div class="memory">
-    <img src="calendar/cal1.jpg">
-    <p>26 de diciembre 2025 - La mejor carta del mundo💗</p>
+    <img src="cal1.jpg">
+    <p>12 de febrero — el inicio de todo</p>
   </div>
   <div class="memory">
-    <img src="calendar/cal2.jpg">
-    <p>26 de diciembre 2025 -Una carta de sentimientos por y para tí<3</p>
+    <img src="cal2.jpg">
+    <p>Un día que guardo para siempre</p>
   </div>
 </div>
 
 <!-- MUSIC -->
-<div id="music" class="section">
+<div id="musicSection" class="section">
   <audio id="player" controls style="width:90%;margin:20px"></audio>
-  <div class="song" onclick="playSong('songs/angel.mp3')">
-    Angel — Massive Attack
-  </div>
+  <div class="song" onclick="playSong('songs/angel.mp3')">Angel — Massive Attack</div>
+  <div class="song" onclick="playSong('songs/loversrock.mp3')">Lovers Rock — TV Girl</div>
+  <div class="song" onclick="playSong('songs/bluehair.mp3')">Blue Hair — TV Girl</div>
 </div>
 
 <!-- HEART -->
 <div id="heart">
-<svg viewBox="0 0 24 24">
-<path d="M12 21s-7-4.6-10-9.5C-1 6.5 4 2 8 5c2 1.7 4 4 4 4s2-2.3 4-4c4-3 9 1.5 6 6.5C19 16.4 12 21 12 21z"/>
-</svg>
+  <svg viewBox="0 0 24 24">
+    <path d="M12 21s-7-4.6-10-9.5C-1 6.5 4 2 8 5c2 1.7 4 4 4 4s2-2.3 4-4c4-3 9 1.5 6 6.5C19 16.4 12 21 12 21z"/>
+  </svg>
 </div>
 
 <div id="emi">Emi&lt;3</div>
 
-<audio id="bg" loop crossorigin="anonymous">
-  <source src="songs/angel.mp3" type="audio/mpeg">
+<audio id="bgMusic" loop>
+  <source src="angel.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-/* MENU */
 const menu=document.getElementById("menu");
-menuBtn.onclick=()=>menu.style.transform =
-menu.style.transform?"":"translateX(0)";
+menuBtn.onclick=()=>{
+  menu.style.transform =
+    menu.style.transform==="translateX(0px)"?
+    "translateX(-100%)":"translateX(0)";
+};
 
 function openSection(id){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
@@ -202,44 +250,43 @@ function openSection(id){
   menu.style.transform="translateX(-100%)";
 }
 
-/* MUSIC */
-const audio=document.getElementById("bg");
-const heart=document.querySelector("#heart svg");
-const ctx=new AudioContext();
-const src=ctx.createMediaElementSource(audio);
-const analyser=ctx.createAnalyser();
-src.connect(analyser);
-analyser.connect(ctx.destination);
-analyser.fftSize=64;
-const data=new Uint8Array(analyser.frequencyBinCount);
-
-function animate(){
-  analyser.getByteFrequencyData(data);
-  let avg=data.reduce((a,b)=>a+b)/data.length;
-  let scale=1+avg/300;
-  heart.style.transform=`scale(${scale})`;
-  requestAnimationFrame(animate);
+const player=document.getElementById("player");
+function playSong(src){
+  player.src=src;
+  player.play();
 }
 
-/* START */
+const images=["images/img1.jpg","images/img2.jpg","images/img3.jpg","images/img4.jpg"];
+let imgIndex=0;
+const bg=document.getElementById("bgImages");
+bg.style.backgroundImage=`url(${images[0]})`;
+
 let started=false;
-document.body.onclick=()=>{
+const bgMusic=document.getElementById("bgMusic");
+const emi=document.getElementById("emi");
+const heart=document.querySelector("#heart svg");
+
+document.body.addEventListener("click",()=>{
   if(!started){
-    ctx.resume();
-    audio.play();
-    animate();
     intro.style.opacity=0;
     setTimeout(()=>intro.remove(),1200);
+    bgMusic.play().catch(()=>{});
     started=true;
   }
+
+  imgIndex=(imgIndex+1)%images.length;
+  bg.style.opacity=0;
+  setTimeout(()=>{
+    bg.style.backgroundImage=`url(${images[imgIndex]})`;
+    bg.style.opacity=.32;
+  },500);
+
+  heart.style.transform="scale(1.15)";
+  setTimeout(()=>heart.style.transform="scale(1)",150);
+
   emi.style.opacity=1;
   setTimeout(()=>emi.style.opacity=0,600);
-};
-
-function playSong(src){
-  audio.src=src;
-  audio.play();
-}
+});
 </script>
 
 </body>
