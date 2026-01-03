@@ -17,7 +17,7 @@ html,body{
   color:#f2c6da;
 }
 
-/* ===== BACKGROUND ===== */
+/* ===== BACKGROUND IMAGES ===== */
 #bgImages{
   position:fixed;
   inset:0;
@@ -29,23 +29,25 @@ html,body{
   z-index:1;
 }
 
-/* ===== VHS ===== */
-#noise,#crt{
+/* ===== VHS EFFECTS ===== */
+#noise{
   position:fixed;
   inset:0;
   pointer-events:none;
-}
-#noise{
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect width='1' height='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");
   opacity:.06;
-  animation:noise .5s steps(2) infinite;
+  animation:noiseMove .5s steps(2) infinite;
   z-index:12;
 }
-@keyframes noise{
-  from{transform:translate(0,0)}
-  to{transform:translate(-10%,10%)}
+@keyframes noiseMove{
+  0%{transform:translate(0,0)}
+  100%{transform:translate(-10%,10%)}
 }
+
 #crt{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
   background:linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px);
   background-size:100% 3px;
   opacity:.08;
@@ -55,24 +57,27 @@ html,body{
 /* ===== FLOATING TEXT ===== */
 .float{
   position:fixed;
-  bottom:-40%;
+  bottom:-30%;
   animation:floatUp linear infinite;
-  white-space:nowrap;
   z-index:3;
+  white-space:nowrap;
 }
+
 .float.love{
   font-size:18px;
   color:#ffd1e6;
-  text-shadow:0 0 8px rgba(255,120,180,.6);
-  opacity:.7;
+  text-shadow:0 0 8px rgba(255,120,180,.45);
+  opacity:.65;
 }
+
 .float.heart{
   font-size:14px;
   opacity:.35;
 }
+
 @keyframes floatUp{
-  from{transform:translateY(140vh)}
-  to{transform:translateY(-180vh)}
+  from{transform:translateY(130vh)}
+  to{transform:translateY(-160vh)}
 }
 
 /* ===== MENU ===== */
@@ -102,6 +107,7 @@ html,body{
   font-size:18px;
   text-decoration:none;
   color:#f2c6da;
+  opacity:.8;
 }
 
 /* ===== SECTIONS ===== */
@@ -117,9 +123,18 @@ html,body{
 
 /* ===== CALENDAR ===== */
 .memory{margin:20px}
-.memory img{
+.memory img, .memory iframe{
   width:100%;
   border-radius:6px;
+  margin-bottom:6px;
+}
+
+/* ===== MUSIC ===== */
+.song{
+  margin:12px 20px;
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  opacity:.85;
 }
 
 /* ===== INTRO ===== */
@@ -133,6 +148,14 @@ html,body{
   z-index:10;
   transition:opacity 1.2s;
 }
+.cover{text-align:center}
+.cover img{
+  width:220px;
+  height:220px;
+  object-fit:cover;
+  border-radius:6px;
+  box-shadow:0 0 25px rgba(255,120,180,.35);
+}
 
 /* ===== HEART ===== */
 #heart{
@@ -144,12 +167,12 @@ html,body{
   z-index:4;
 }
 #heart svg{
-  width:240px;
-  height:240px;
+  width:220px;
+  height:220px;
   fill:none;
   stroke:#ff4f86;
-  stroke-width:2.2;
-  filter:drop-shadow(0 0 12px rgba(255,80,140,.45));
+  stroke-width:2;
+  transition:transform .15s;
 }
 
 /* ===== EMI ===== */
@@ -172,28 +195,30 @@ html,body{
 <div id="crt"></div>
 <div id="noise"></div>
 
-<!-- FLOATING -->
+<!-- FLOATING RAIN -->
 <script>
 for(let i=0;i<30;i++){
   const t=document.createElement("div");
   t.className="float love";
   t.textContent="I love you";
   t.style.left=Math.random()*100+"%";
-  t.style.animationDuration=12+Math.random()*10+"s";
-  t.style.animationDelay=Math.random()*-25+"s";
+  t.style.animationDuration=10+Math.random()*8+"s";
+  t.style.animationDelay=Math.random()*-20+"s";
   document.body.appendChild(t);
 }
-for(let i=0;i<18;i++){
+
+for(let i=0;i<20;i++){
   const h=document.createElement("div");
   h.className="float heart";
   h.textContent="♡";
   h.style.left=Math.random()*100+"%";
-  h.style.animationDuration=18+Math.random()*12+"s";
-  h.style.animationDelay=Math.random()*-30+"s";
+  h.style.animationDuration=12+Math.random()*10+"s";
+  h.style.animationDelay=Math.random()*-25+"s";
   document.body.appendChild(h);
 }
 </script>
 
+<!-- MENU -->
 <div id="menuBtn">☰</div>
 <div id="menu">
   <a onclick="openSection('inicio')">Inicio</a>
@@ -201,27 +226,32 @@ for(let i=0;i<18;i++){
   <a onclick="openSection('musicSection')">Música</a>
 </div>
 
+<!-- INTRO -->
 <div id="intro">
-  <p style="opacity:.6">toca para comenzar</p>
+  <div class="cover">
+    <img src="cover.jpg" alt="Portada">
+    <p style="opacity:.6">toca para comenzar</p>
+  </div>
 </div>
 
 <!-- CALENDAR -->
 <div id="calendar" class="section">
   <div class="memory">
-    <img src="cal1.jpg">
+    <img src="cal1.jpg" alt="Recuerdo 1">
     <p>26 diciembre 2025 - La mejor carta del mundo 💗</p>
   </div>
   <div class="memory">
-    <img src="cal2.jpg">
-    <p>26 de diciembre 2025 - Carta de sentimientos💗</p>
+    <img src="cal2.jpg" alt="Recuerdo 2">
+    <p>26 diciembre 2025 - Carta de sentimientos 💗</p>
   </div>
-  <!-- NUEVO: PDF INTEGRADO -->
+  <!-- PDF INTEGRADO -->
   <div class="memory">
     <iframe src="amor.pdf" width="100%" height="400px"></iframe>
-    <p>1 enero 2026 - PDF de amor 💌</p>
+    <p>26 diciembre 2025 - PDF de amor 💌</p>
   </div>
 </div>
 
+<!-- MUSIC -->
 <div id="musicSection" class="section">
   <audio id="player" controls style="width:90%;margin:20px"></audio>
   <div class="song" onclick="playSong('songs/angel.mp3')">Angel — Massive Attack</div>
@@ -229,6 +259,7 @@ for(let i=0;i<18;i++){
   <div class="song" onclick="playSong('songs/bluehair.mp3')">Blue Hair — TV Girl</div>
 </div>
 
+<!-- HEART -->
 <div id="heart">
   <svg viewBox="0 0 24 24">
     <path d="M12 21s-7-4.6-10-9.5C-1 6.5 4 2 8 5c2 1.7 4 4 4 4s2-2.3 4-4c4-3 9 1.5 6 6.5C19 16.4 12 21 12 21z"/>
@@ -237,50 +268,51 @@ for(let i=0;i<18;i++){
 
 <div id="emi">Emi&lt;3</div>
 
-<audio id="bgMusic" src="angel.mp3" loop></audio>
+<audio id="bgMusic" loop>
+  <source src="angel.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-/* MENU */
+// ===== MENU =====
+const menu=document.getElementById("menu");
+const menuBtn=document.getElementById("menuBtn");
 menuBtn.onclick=()=>{
-  menu.style.transform=
+  menu.style.transform =
     menu.style.transform==="translateX(0px)"?
     "translateX(-100%)":"translateX(0)";
 };
+
 function openSection(id){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   if(id!=="inicio") document.getElementById(id).classList.add("active");
   menu.style.transform="translateX(-100%)";
 }
 
-/* PLAYER */
+// ===== MUSIC PLAYER =====
 const player=document.getElementById("player");
-function playSong(src){player.src=src;player.play();}
+function playSong(src){
+  player.src=src;
+  player.play();
+}
 
-/* BACKGROUND */
-const images=["images/img1.jpg","images/img2.jpg","images/img3.jpg","images/img4.jpg"];
+// ===== BACKGROUND IMAGES =====
+const images=["cover.jpg","cal1.jpg","cal2.jpg"];
 let imgIndex=0;
 const bg=document.getElementById("bgImages");
 bg.style.backgroundImage=`url(${images[0]})`;
 
-/* AUDIO REACTIVE HEART */
-const audio=document.getElementById("bgMusic");
-const heart=document.querySelector("#heart svg");
+// ===== INTRO / START =====
+let started=false;
+const bgMusic=document.getElementById("bgMusic");
 const emi=document.getElementById("emi");
-
-let ctx, analyser, data, started=false;
+const heart=document.querySelector("#heart svg");
+const intro=document.getElementById("intro");
 
 document.body.addEventListener("click",()=>{
   if(!started){
     intro.style.opacity=0;
     setTimeout(()=>intro.remove(),1200);
-    ctx=new (window.AudioContext||window.webkitAudioContext)();
-    const src=ctx.createMediaElementSource(audio);
-    analyser=ctx.createAnalyser();
-    analyser.fftSize=256;
-    data=new Uint8Array(analyser.frequencyBinCount);
-    src.connect(analyser);
-    analyser.connect(ctx.destination);
-    audio.play();
+    bgMusic.play().catch(()=>{});
     started=true;
   }
 
@@ -291,21 +323,12 @@ document.body.addEventListener("click",()=>{
     bg.style.opacity=.32;
   },500);
 
+  heart.style.transform="scale(1.15)";
+  setTimeout(()=>heart.style.transform="scale(1)",150);
+
   emi.style.opacity=1;
   setTimeout(()=>emi.style.opacity=0,600);
 });
-
-function animate(){
-  if(analyser){
-    analyser.getByteFrequencyData(data);
-    let bass=0;
-    for(let i=0;i<20;i++) bass+=data[i];
-    bass/=20;
-    heart.style.transform=`scale(${1+bass/220})`;
-  }
-  requestAnimationFrame(animate);
-}
-animate();
 </script>
 
 </body>
