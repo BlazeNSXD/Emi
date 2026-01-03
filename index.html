@@ -75,6 +75,13 @@ html,body{
   opacity:.35;
 }
 
+.float.emi{
+  font-size:24px;
+  color:#ff5fa2;
+  text-shadow:0 0 12px rgba(255,95,162,.6);
+  opacity:.9;
+}
+
 @keyframes floatUp{
   from{transform:translateY(130vh)}
   to{transform:translateY(-160vh)}
@@ -174,18 +181,6 @@ html,body{
   stroke-width:2;
   transition:transform .15s;
 }
-
-/* ===== EMI ===== */
-#emi{
-  position:fixed;
-  bottom:17%;
-  width:100%;
-  text-align:center;
-  font-size:28px;
-  opacity:0;
-  transition:.4s;
-  z-index:5;
-}
 </style>
 </head>
 
@@ -194,29 +189,6 @@ html,body{
 <div id="bgImages"></div>
 <div id="crt"></div>
 <div id="noise"></div>
-
-<!-- FLOATING RAIN -->
-<script>
-for(let i=0;i<30;i++){
-  const t=document.createElement("div");
-  t.className="float love";
-  t.textContent="I love you";
-  t.style.left=Math.random()*100+"%";
-  t.style.animationDuration=10+Math.random()*8+"s";
-  t.style.animationDelay=Math.random()*-20+"s";
-  document.body.appendChild(t);
-}
-
-for(let i=0;i<20;i++){
-  const h=document.createElement("div");
-  h.className="float heart";
-  h.textContent="♡";
-  h.style.left=Math.random()*100+"%";
-  h.style.animationDuration=12+Math.random()*10+"s";
-  h.style.animationDelay=Math.random()*-25+"s";
-  document.body.appendChild(h);
-}
-</script>
 
 <!-- MENU -->
 <div id="menuBtn">☰</div>
@@ -244,7 +216,6 @@ for(let i=0;i<20;i++){
     <img src="cal2.jpg" alt="Recuerdo 2">
     <p>26 diciembre 2025 - Carta de sentimientos 💗</p>
   </div>
-  <!-- PDF INTEGRADO -->
   <div class="memory">
     <iframe src="amor.pdf" width="100%" height="400px"></iframe>
     <p>26 diciembre 2025 - PDF de amor 💌</p>
@@ -273,15 +244,28 @@ for(let i=0;i<20;i++){
 </audio>
 
 <script>
+// ===== FLOATING TEXT =====
+const loveTexts=[];
+function createFloat(text,className){
+  const t=document.createElement("div");
+  t.className="float "+className;
+  t.textContent=text;
+  t.style.left=Math.random()*100+"%";
+  t.style.animationDuration=10+Math.random()*8+"s";
+  t.style.animationDelay=Math.random()*-20+"s";
+  document.body.appendChild(t);
+  return t;
+}
+// lluvia inicial
+for(let i=0;i<40;i++) loveTexts.push(createFloat("I love you","love"));
+for(let i=0;i<25;i++) createFloat("♡","heart");
+
 // ===== MENU =====
 const menu=document.getElementById("menu");
 const menuBtn=document.getElementById("menuBtn");
 menuBtn.onclick=()=>{
-  menu.style.transform =
-    menu.style.transform==="translateX(0px)"?
-    "translateX(-100%)":"translateX(0)";
+  menu.style.transform = menu.style.transform==="translateX(0px)"?"translateX(-100%)":"translateX(0)";
 };
-
 function openSection(id){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   if(id!=="inicio") document.getElementById(id).classList.add("active");
@@ -290,23 +274,21 @@ function openSection(id){
 
 // ===== MUSIC PLAYER =====
 const player=document.getElementById("player");
-function playSong(src){
-  player.src=src;
-  player.play();
-}
+function playSong(src){player.src=src;player.play();}
 
-// ===== BACKGROUND IMAGES =====
-const images=["cover.jpg","cal1.jpg","cal2.jpg"];
+// ===== BACKGROUNDS =====
+const images=["img1.jpg","img2.jpg","img3.jpg"];
 let imgIndex=0;
 const bg=document.getElementById("bgImages");
-bg.style.backgroundImage=`url(${images[0]})`;
 
-// ===== INTRO / START =====
+// ===== INTRO & HEART =====
 let started=false;
 const bgMusic=document.getElementById("bgMusic");
-const emi=document.getElementById("emi");
 const heart=document.querySelector("#heart svg");
 const intro=document.getElementById("intro");
+
+// Timestamps aproximados "I love you" en Angel
+const loveMoments=[18,19.5,21,22.5,24,25.5,27,28.5]; 
 
 document.body.addEventListener("click",()=>{
   if(!started){
@@ -314,8 +296,37 @@ document.body.addEventListener("click",()=>{
     setTimeout(()=>intro.remove(),1200);
     bgMusic.play().catch(()=>{});
     started=true;
+
+    // ===== AUDIO ANALYSIS =====
+    const audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    const source=audioCtx.createMediaElementSource(bgMusic);
+    const analyser=audioCtx.createAnalyser();
+    source.connect(analyser);
+    analyser.connect(audioCtx.destination);
+    analyser.fftSize=256;
+    const dataArray=new Uint8Array(analyser.frequencyBinCount);
+
+    function animateHeart(){
+      requestAnimationFrame(animateHeart);
+      analyser.getByteFrequencyData(dataArray);
+      const volume=dataArray.reduce((a,b)=>a+b)/dataArray.length;
+      const scale=1 + volume/400;
+      heart.style.transform=`scale(${scale})`;
+      if(volume>50) for(let i=0;i<2;i++) createFloat("I love you","love");
+    }
+    animateHeart();
+
+    function checkLoveMoments(){
+      const current = bgMusic.currentTime;
+      if(loveMoments.some(t=>Math.abs(current-t)<0.2)){
+        for(let i=0;i<5;i++) createFloat("I love you","love");
+      }
+      requestAnimationFrame(checkLoveMoments);
+    }
+    checkLoveMoments();
   }
 
+  // Cambia background
   imgIndex=(imgIndex+1)%images.length;
   bg.style.opacity=0;
   setTimeout(()=>{
@@ -323,11 +334,15 @@ document.body.addEventListener("click",()=>{
     bg.style.opacity=.32;
   },500);
 
-  heart.style.transform="scale(1.15)";
-  setTimeout(()=>heart.style.transform="scale(1)",150);
-
-  emi.style.opacity=1;
-  setTimeout(()=>emi.style.opacity=0,600);
+  // Cada toque añade un "Emi<3"
+  const emiFloat=document.createElement("div");
+  emiFloat.className="float emi";
+  emiFloat.textContent="Emi<3";
+  emiFloat.style.left=Math.random()*80+10+"%";
+  emiFloat.style.animationDuration=4+Math.random()*3+"s";
+  emiFloat.style.animationDelay="0s";
+  document.body.appendChild(emiFloat);
+  setTimeout(()=>emiFloat.remove(),7000);
 });
 </script>
 
