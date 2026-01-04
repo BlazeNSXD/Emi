@@ -2,8 +2,11 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>♡</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff5fa2">
 
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
 
@@ -17,75 +20,54 @@ html,body{
   color:#f2c6da;
 }
 
-/* ===== BACKGROUND IMAGES ===== */
+/* ===== BACKGROUND ===== */
 #bgImages{
   position:fixed;
   inset:0;
   background-size:cover;
   background-position:center;
-  opacity:.32;
-  filter:saturate(1.1);
+  opacity:.28;
   transition:opacity 1s, background-image 1s;
   z-index:1;
 }
 
-/* ===== VHS EFFECTS ===== */
-#noise{
+/* ===== VHS ===== */
+#crt,#noise{
   position:fixed;
   inset:0;
   pointer-events:none;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect width='1' height='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");
-  opacity:.06;
-  animation:noiseMove .5s steps(2) infinite;
-  z-index:12;
 }
-@keyframes noiseMove{
-  0%{transform:translate(0,0)}
-  100%{transform:translate(-10%,10%)}
-}
-
 #crt{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px);
+  background:linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px);
   background-size:100% 3px;
-  opacity:.08;
+  opacity:.07;
   z-index:11;
 }
+#noise{
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='1' height='1' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E");
+  opacity:.06;
+  z-index:12;
+}
 
-/* ===== FLOATING TEXT ===== */
+/* ===== FLOATS ===== */
 .float{
   position:fixed;
-  bottom:-30%;
+  bottom:-20%;
   animation:floatUp linear infinite;
-  z-index:3;
   white-space:nowrap;
+  z-index:3;
 }
-
 .float.love{
-  font-size:18px;
-  color:#ffd1e6;
-  text-shadow:0 0 12px rgba(255,120,180,.7);
-  opacity:.75;
-}
-
-.float.heart{
   font-size:16px;
-  color:#ff4f86;
-  opacity:.5;
+  color:#ffd1e6;
+  text-shadow:0 0 10px rgba(255,120,180,.8);
 }
-
-.float.emi{
-  font-size:24px;
-  color:#ff5fa2;
-  text-shadow:0 0 16px rgba(255,95,162,.7);
-  opacity:.9;
-}
+.float.heart{font-size:14px;color:#ff4f86;}
+.float.emi{font-size:22px;color:#ff5fa2;}
 
 @keyframes floatUp{
-  from{transform:translateY(130vh)}
-  to{transform:translateY(-160vh)}
+  from{transform:translateY(120vh)}
+  to{transform:translateY(-140vh)}
 }
 
 /* ===== MENU ===== */
@@ -95,19 +77,15 @@ html,body{
   left:14px;
   z-index:20;
   font-size:26px;
-  opacity:.7;
 }
 #menu{
   position:fixed;
-  top:0;
-  left:0;
-  width:70%;
-  height:100%;
-  background:rgba(10,10,10,.96);
-  z-index:19;
+  inset:0 30% 0 0;
+  background:rgba(10,10,10,.95);
   transform:translateX(-100%);
   transition:.4s;
-  padding:60px 20px;
+  padding:70px 20px;
+  z-index:19;
 }
 #menu a{
   display:block;
@@ -115,7 +93,6 @@ html,body{
   font-size:18px;
   text-decoration:none;
   color:#f2c6da;
-  opacity:.8;
 }
 
 /* ===== SECTIONS ===== */
@@ -123,7 +100,7 @@ html,body{
   position:fixed;
   inset:0;
   display:none;
-  background:rgba(0,0,0,.7);
+  background:rgba(0,0,0,.75);
   overflow-y:auto;
   z-index:6;
 }
@@ -133,36 +110,40 @@ html,body{
 .memory{margin:20px}
 .memory img, .memory iframe{
   width:100%;
-  border-radius:6px;
-  margin-bottom:6px;
+  border-radius:8px;
 }
 
 /* ===== MUSIC ===== */
 .song{
   margin:12px 20px;
-  padding:10px;
+  padding:12px;
   border-bottom:1px solid rgba(255,255,255,.1);
-  opacity:.85;
+}
+
+/* ===== POEMS ===== */
+.poem{
+  margin:20px;
+  padding:14px;
+  border-left:3px solid #ff5fa2;
+  opacity:.9;
 }
 
 /* ===== INTRO ===== */
 #intro{
   position:fixed;
   inset:0;
-  background:#0b0b0b;
+  background:#000;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
   z-index:10;
   transition:opacity 1.2s;
 }
-.cover{text-align:center}
 .cover img{
-  width:220px;
-  height:220px;
-  object-fit:cover;
+  width:200px;
+  height:200px;
   border-radius:6px;
-  box-shadow:0 0 35px rgba(255,120,180,.45);
+  box-shadow:0 0 30px rgba(255,120,180,.4);
 }
 
 /* ===== HEART ===== */
@@ -170,17 +151,17 @@ html,body{
   position:fixed;
   inset:0;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
   z-index:4;
 }
 #heart svg{
-  width:220px;
-  height:220px;
-  fill:none;
+  width:200px;
+  height:200px;
   stroke:#ff4f86;
+  fill:none;
   stroke-width:2;
-  transition:transform .1s;
+  transition:.1s;
 }
 </style>
 </head>
@@ -197,146 +178,156 @@ html,body{
   <a onclick="openSection('inicio')">Inicio</a>
   <a onclick="openSection('calendar')">Calendario</a>
   <a onclick="openSection('musicSection')">Música</a>
+  <a onclick="openSection('poems')">Poemas</a>
 </div>
 
 <!-- INTRO -->
 <div id="intro">
   <div class="cover">
-    <img src="cover.jpg" alt="Portada">
+    <img src="cover.jpg">
     <p style="opacity:.6">toca para comenzar</p>
   </div>
 </div>
 
-<!-- CALENDAR -->
+<!-- CALENDAR (TÍTULOS ORIGINALES, SIN CAMBIOS) -->
 <div id="calendar" class="section">
   <div class="memory">
-    <img src="cal1.jpg" alt="Recuerdo 1">
+    <img src="cal1.jpg">
     <p>26 diciembre 2025 - La mejor carta del mundo 💗</p>
   </div>
   <div class="memory">
-    <img src="cal2.jpg" alt="Recuerdo 2">
-    <p>26 diciembre 2025 - Carta de sentimientos 💗</p>
+    <img src="cal2.jpg">
+    <p>26 de diciembre 2025 - Carta de sentimientos💗</p>
   </div>
   <div class="memory">
-    <iframe src="amor.pdf" width="100%" height="400px"></iframe>
+    <iframe src="amor.pdf" height="420"></iframe>
     <p>1 enero 2026 - PDF de amor 💌</p>
   </div>
   <div class="memory">
-    <img src="cal3.jpg" alt="Recuerdo 3">
+    <img src="cal3.jpg">
     <p>2 enero 2026 - Amor web🔥</p>
   </div>
-  </div>
+</div>
 
 <!-- MUSIC -->
 <div id="musicSection" class="section">
   <audio id="player" controls style="width:90%;margin:20px"></audio>
   <div class="song" onclick="playSong('songs/angel.mp3')">Angel — Massive Attack</div>
   <div class="song" onclick="playSong('songs/loversrock.mp3')">Lovers Rock — TV Girl</div>
-  <div class="song" onclick="playSong('songs/bluehair.mp3')">Blue Hair — TV Girl</div>
+</div>
+
+<!-- POEMS -->
+<div id="poems" class="section">
+  <div class="poem">Yo te amo, yo te quiero, yo te deseo, yo te anhelo esta navidad la estrella mus bonita fue tu destello, Un destello de tu bellaza, la belleza de tu persona. la belleza de tu cuerpo que me enamora
+
+Menamoras con cada palabra, las palabras que hacen que m abra, la palabras que amo Palabras que son poesia simplemente porque son de la persona que amo
+
+Te amo a ti y solo a ti, con todo mi ser, mi alma y mi cariño no importa nada mas ni los demas Te amo y no a medias, al final de para amarte no necesito ni que digas que me amas
+
+No temo lastimarme, pues fue mi eleccion de ti enamorarme, te elegiria ahora y cuando pueda porque hasta mi alma de ti quedo enamorada, mas temor me causa lastimarte pra mi seria un martir
+
+Eres todo lo que quiero, todo lo que deseo, eres vida porque contigo quiero experimentarlo todo, Eres amor porque eres victima y reciproca del mio Eres la persona que amo y esa m basta para que seas mi todo.</div>
+  <div class="poem">Ahora mismo quisiera escribirte un libro entero pero, no soy escritor, m gustaría pintarte en mis obras, pero no soy pintor, m gustaría escribirte canciones, pero no soy compositor, m gustaría hacer todo por tí, pero soy solo yo, y yo solo puedo amarte de verdad y para siempre, así que lo haré no a la perfección pero lo haré con todo lo que pueda, por qué el amarte ya es una forma de arte, y eso m convierte en artista y a tí en mi inspiración</div>
+  <div class="poem">Marcame con besos y mordidas,
+Muéstrame que mi alma y cuerpo son tuyos,
+Amame y apoderate de mis yo's,
+Demuéstrame tu amor, amarrame no importa el dolor,
+Hazme sufrir mientras sea por amor,
+hazme vivir mientras sea por amor,
+haz lo que tengas que hacer no me importa el dolor</div>
+   <div class="poem">Déjame pintar mis caricias en tu cuerpo,
+Dejame llenar de mi amor tu alma,
+Déjame mostrar te un futuro conmigo,
+Porque yo lo único que quiero es estar contigo,
+Amarte, desearte, anhelarte, no importa que sea, yo quiero todo contigo.
+No soy artista pero se apreciar el arte,
+Eres como una obra de arte, quisiera ser artista para aún más amarte,
+Por tí y Para tí.</div>
 </div>
 
 <!-- HEART -->
 <div id="heart">
-  <svg viewBox="0 0 24 24">
-    <path d="M12 21s-7-4.6-10-9.5C-1 6.5 4 2 8 5c2 1.7 4 4 4 4s2-2.3 4-4c4-3 9 1.5 6 6.5C19 16.4 12 21 12 21z"/>
-  </svg>
+<svg viewBox="0 0 24 24">
+<path d="M12 21s-7-4.6-10-9.5C-1 6.5 4 2 8 5c2 1.7 4 4 4 4s2-2.3 4-4c4-3 9 1.5 6 6.5C19 16.4 12 21 12 21z"/>
+</svg>
 </div>
 
-<div id="emi">Emi&lt;3</div>
-
 <audio id="bgMusic" loop>
-  <source src="songs/angel.mp3" type="audio/mpeg">
+<source src="songs/angel.mp3">
 </audio>
 
 <script>
-// ===== FLOATING TEXT =====
-function createFloat(text,className){
-  const t=document.createElement("div");
-  t.className="float "+className;
-  t.textContent=text;
-  t.style.left=Math.random()*90+5+"%";
-  t.style.animationDuration=10+Math.random()*5+"s";
-  t.style.animationDelay=Math.random()*-20+"s";
-  document.body.appendChild(t);
-  setTimeout(()=>t.remove(),15000);
+// ===== PWA =====
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("service-worker.js");
 }
 
-// lluvia inicial
-for(let i=0;i<25;i++) createFloat("I love you","love");
-for(let i=0;i<15;i++) createFloat("♡","heart");
+// ===== FLOATS =====
+function spawn(text,cls){
+  const d=document.createElement("div");
+  d.className="float "+cls;
+  d.textContent=text;
+  d.style.left=Math.random()*90+"%";
+  d.style.animationDuration=10+Math.random()*6+"s";
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(),15000);
+}
+for(let i=0;i<18;i++)spawn("I love you","love");
 
 // ===== MENU =====
-const menu=document.getElementById("menu");
-const menuBtn=document.getElementById("menuBtn");
-menuBtn.onclick=()=>{
-  menu.style.transform = menu.style.transform==="translateX(0px)"?"translateX(-100%)":"translateX(0)";
-};
+menuBtn.onclick=()=>menu.style.transform=
+menu.style.transform?"":"translateX(0)";
 function openSection(id){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  if(id!=="inicio") document.getElementById(id).classList.add("active");
+  if(id!=="inicio")document.getElementById(id).classList.add("active");
   menu.style.transform="translateX(-100%)";
 }
 
-// ===== MUSIC PLAYER =====
+// ===== MUSIC =====
 const player=document.getElementById("player");
 function playSong(src){player.src=src;player.play();}
 
-// ===== BACKGROUNDS =====
-const images=["images/img1.jpg","images/img2.jpg","images/img3.jpg"];
-let imgIndex=0;
-const bg=document.getElementById("bgImages");
+// ===== BACKGROUND =====
+const imgs=["images/img1.jpg","images/img2.jpg","images/img3.jpg"];
+let i=0; bgImages.style.backgroundImage=`url(${imgs[0]})`;
 
-// ===== INTRO & HEART =====
-let started=false;
-const bgMusic=document.getElementById("bgMusic");
+// ===== AUDIO REACTIVE HEART =====
 const heart=document.querySelector("#heart svg");
-const intro=document.getElementById("intro");
+const bgMusic=document.getElementById("bgMusic");
+let started=false;
 
 document.body.addEventListener("click",()=>{
   if(!started){
     intro.style.opacity=0;
     setTimeout(()=>intro.remove(),1200);
-    bgMusic.play().catch(()=>{});
+    bgMusic.play();
     started=true;
 
-    // ===== AUDIO REACTIVE HEART =====
-    const audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-    const source=audioCtx.createMediaElementSource(bgMusic);
-    const analyser=audioCtx.createAnalyser();
-    source.connect(analyser);
-    analyser.connect(audioCtx.destination);
+    const ctx=new AudioContext();
+    const src=ctx.createMediaElementSource(bgMusic);
+    const analyser=ctx.createAnalyser();
+    src.connect(analyser);
+    analyser.connect(ctx.destination);
     analyser.fftSize=256;
-    const dataArray=new Uint8Array(analyser.frequencyBinCount);
+    const data=new Uint8Array(analyser.frequencyBinCount);
 
-    function animateHeart(){
-      requestAnimationFrame(animateHeart);
-      analyser.getByteFrequencyData(dataArray);
-      const volume=dataArray.reduce((a,b)=>a+b)/dataArray.length;
-      const scale=1 + volume/400;
-      heart.style.transform=`scale(${scale})`;
-
-      if(volume>50) createFloat("I love you","love");
-    }
-    animateHeart();
+    (function animate(){
+      requestAnimationFrame(animate);
+      analyser.getByteFrequencyData(data);
+      const v=data.reduce((a,b)=>a+b)/data.length;
+      heart.style.transform=`scale(${1+v/400})`;
+      if(v>60)spawn("I love you","love");
+    })();
   }
 
-  // Cambia background
-  imgIndex=(imgIndex+1)%images.length;
-  bg.style.opacity=0;
+  i=(i+1)%imgs.length;
+  bgImages.style.opacity=0;
   setTimeout(()=>{
-    bg.style.backgroundImage=`url(${images[imgIndex]})`;
-    bg.style.opacity=.32;
+    bgImages.style.backgroundImage=`url(${imgs[i]})`;
+    bgImages.style.opacity=.28;
   },500);
 
-  // Cada toque añade "Emi<3"
-  const emiFloat=document.createElement("div");
-  emiFloat.className="float emi";
-  emiFloat.textContent="Emi<3";
-  emiFloat.style.left=Math.random()*80+10+"%";
-  emiFloat.style.animationDuration=4+Math.random()*3+"s";
-  emiFloat.style.animationDelay="0s";
-  document.body.appendChild(emiFloat);
-  setTimeout(()=>emiFloat.remove(),7000);
+  spawn("Emi<3","emi");
 });
 </script>
 

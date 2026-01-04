@@ -1,0 +1,27 @@
+const CACHE_NAME = "emi-love-v1";
+
+const FILES_TO_CACHE = [
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./cover.jpg",
+  "./amor.pdf",
+  "./images/img1.jpg",
+  "./images/img2.jpg",
+  "./images/img3.jpg",
+  "./songs/angel.mp3",
+  "./songs/loversrock.mp3"
+];
+
+self.addEventListener("install", e => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener("fetch", e => {
+  e.respondWith(
+    caches.match(e.request).then(res => res || fetch(e.request))
+  );
+});
