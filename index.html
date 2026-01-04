@@ -179,6 +179,7 @@ html,body{
   <a onclick="openSection('calendar')">Calendario</a>
   <a onclick="openSection('musicSection')">Música</a>
   <a onclick="openSection('poems')">Poemas</a>
+  <a onclick="openSection('wordsSection')">Palabras Bonitas</a>
 </div>
 
 <!-- INTRO -->
@@ -257,7 +258,34 @@ Por tí y Para tí.</div>
 <source src="songs/angel.mp3">
 </audio>
 
+<!-- WORDS -->
+<div id="wordsSection" class="section">
+  <div style="padding:20px">
+    <h2>💖 Palabras bonitas para ti 💖</h2>
+    <p>Haz clic en el botón para generar palabras bonitas:</p>
+    <button onclick="generateWord()" style="padding:10px 20px; font-size:16px;">Generar palabra</button>
+  </div>
+</div>
+
 <script>
+// ===== WORDS =====
+const words = [
+  "Te adoro", "Eres increíble", "Siempre contigo", "Mi alegría", "Te extraño",
+  "Eres única", "Mi mundo", "Sonrisa hermosa", "Mi corazón", "Brillas siempre"
+];
+
+function generateWord(){
+  const word = words[Math.floor(Math.random() * words.length)];
+  const div = document.createElement("div");
+  div.className = "float emi"; // usa estilo parecido a Emi<3
+  div.textContent = word;
+  div.style.left = Math.random() * 80 + 10 + "%";
+  div.style.animationDuration = 4 + Math.random() * 3 + "s";
+  div.style.animationDelay = "0s";
+  document.body.appendChild(div);
+  setTimeout(()=>div.remove(),7000);
+}
+
 // ===== PWA =====
 if("serviceWorker" in navigator){
   navigator.serviceWorker.register("service-worker.js");
